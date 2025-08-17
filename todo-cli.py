@@ -1,6 +1,8 @@
 
 __version__  = '1.0.0'
 
+import os
+import json
 import datetime
 
 
@@ -16,11 +18,13 @@ def addTask(tasks):
     adding = True
     while adding:
         task = input("Type out your task! (type 'b' or 'back' to go back) \n> ")
+
         if task == 'b' or task == 'exit' or task == 'back':
             adding = False
             return
         else:
-            tasks.append(task)            
+            with open('tasks.json', 'a') as file:
+                json.dump(task, file, indent=4)
             print("✅ | Added!\n")
 
     return tasks
