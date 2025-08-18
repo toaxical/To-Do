@@ -1,9 +1,8 @@
 
 __version__  = '1.0.0'
 
-import os
-import json
 import datetime
+import todo_RW as savescr
 
 
 def greet():
@@ -23,11 +22,9 @@ def addTask(tasks):
             adding = False
             return
         else:
-            with open('tasks.json', 'a') as file:
-                json.dump(task, file, indent=4)
-            print("✅ | Added!\n")
-
-    return tasks
+            tasks.append({'id=': len(tasks)+1, 'task': task})
+    
+    return tasks and savescr.saveTasks(tasks)
 
 
 def viewTasks(tasks):
@@ -107,5 +104,5 @@ def main():
 
 if __name__ == '__main__':
     print(f"\x1B[3mTo-Do List v{__version__}\x1B[0m")
-    greet()
+     # head to todo_RW.py and edit the 'tasks.json' if you want to save tasks in a different file, though IT SHOULD BE A JSON FILE!
     main()
