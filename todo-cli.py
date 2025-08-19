@@ -1,5 +1,5 @@
 
-__version__  = '1.0.0'
+__version__  = '1.1.0'
 
 import datetime
 import todo_RW as savescr
@@ -22,9 +22,11 @@ def addTask(tasks):
             adding = False
             return
         else:
-            tasks.append({'id=': len(tasks)+1, 'task': task})
+            lastid = tasks[-1].get('id')
+            tasks.append({'id': lastid+1, 'task': task})
+            print('⸜(｡˃ ᵕ ˂ )⸝♡\n')
     
-    return tasks and savescr.saveTasks(tasks)
+    return tasks
 
 
 def viewTasks(tasks):
@@ -34,15 +36,20 @@ def viewTasks(tasks):
     while imlooking:
         print('\n⊹₊ ˚‧︵‿₊୨ ~ TASKS ~ ୧₊‿︵‧ ˚ ₊⊹\n')
 
-        for x in tasks:
-            print(f'{1+tasks.index(x)}. '+x)
+        x=1
+        for items in tasks:
+
+            for slno in range(x, x+1):
+                item = f"{slno}. {items.get('task')}"
+                x+=1
+                print(item)
         
         if len(tasks) == 0:
             print('\n woah.. so empty... 🍃\n')
             print('     ｡☆✼★━━━━━━━━━━━━★✼☆｡')
             break
 
-        print('     ｡☆✼★━━━━━━━━━━━━★✼☆｡')
+        print('\n     ｡☆✼★━━━━━━━━━━━━★✼☆｡')
 
         cont = input("\n['b' to go back]\n")
         if cont == 'b' or cont == 'exit' or cont == 'back':
@@ -60,29 +67,45 @@ def removeTask(tasks):
         return
 
     while imremoving:
-        for x in tasks:
-            print(f'{1+tasks.index(x)}. '+x)
+        print()
 
-        indx = input("\nEnter the 'number' of the task you'd like to remove ('b' to go back): >  ")
+        x = 1
+        for items in tasks:
+            for slno in range(x, x+1):
+                item = f"{slno}. {items.get('task')} [ID: {items.get('id')}]"
+                x += 1
+                print(item)
+
+        remId = input("\nEnter the 'ID' of the task you'd like to remove ('b' to go back): >  ")
         try:
-            indx = int(indx)
-        except:
-            TypeError()
-            break
+            remId = int(remId)
+        except ValueError:
+            if remId == 'b' or remId == 'back':
+                break
+            else:
+                print("⸝🦋 | Um.. I can't find a task with that Id! :C \n")
+
         else:
             try:
-                print(f'Sucessfully removed {tasks[indx-1]} from tasks.')
-                tasks.pop(indx-1)
+                tempRemlist = []
+                for task in tasks:
+                    if task["id"] == remId:
+                        tempRemlist.append(task)
+                        break 
+
+                remTask_indx = tasks.index(tempRemlist[0])
+                tasks.pop(remTask_indx)
+    
             except:
                 IndexError()
                 print('⚠️ | Sorry, that task does not exist.\n')
-            else:
-                continue
     return tasks
 
 
 def main():
-    tasks = []
+
+
+    tasks = savescr.loadTasks('./tasks.json')  # head to todo_RW.py and edit the 'tasks.json' if you want to save tasks in a different file, though IT SHOULD BE A JSON FILE!
 
     inApp = True
     while inApp:
@@ -95,14 +118,17 @@ def main():
             else:
                 if initi == 1:
                     addTask(tasks)
+                    savescr.modifyTasks(tasks)
                 elif initi == 2:
                     viewTasks(tasks)
                 elif initi == 3:
                     removeTask(tasks)
+                    savescr.modifyTasks(tasks)
                 elif initi == 4:
+                    print('\nヾ( ˃ᴗ˂ )◞ • *✰ bye bye!\n')
                     inApp = False
 
 if __name__ == '__main__':
     print(f"\x1B[3mTo-Do List v{__version__}\x1B[0m")
-     # head to todo_RW.py and edit the 'tasks.json' if you want to save tasks in a different file, though IT SHOULD BE A JSON FILE!
+    greet()
     main()

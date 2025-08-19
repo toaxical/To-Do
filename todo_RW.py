@@ -15,10 +15,12 @@ def loadTasks(saveFile):
             print(f"An error occurred while trying to load tasks: {excptn}")
             return []
         
-def saveTasks(tasks_data):
-    with open(saveFile, 'a') as mdfile:
+def modifyTasks(tasks_data):
+    with open(saveFile, 'w') as mdfile:
         try:
             json.dump(tasks_data, mdfile, indent=4)
         except Exception as excptn:
             print(f"Error occurred while saving tasks! : {excptn}")
+        else:
+            print("✅ | Success!")
 
